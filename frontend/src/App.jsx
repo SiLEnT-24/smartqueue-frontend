@@ -4,7 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth, homeFor } from './context/AuthContext';
 import Landing from './pages/Landing';
 import { Login, Register } from './pages/Auth';
-import StudentDashboard from './pages/StudentDashboard';
+import StudentDashboard from './pages/UserDashboard';
 import GenerateToken from './pages/GenerateToken';
 import TokenDetails from './pages/TokenDetails';
 import Display from './pages/Display';

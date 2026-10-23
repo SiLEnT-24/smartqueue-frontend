@@ -1,6 +1,6 @@
 // Small fetch wrapper: adds the JWT, parses JSON, throws friendly errors.
-const BASE = import.meta.env.VITE_API_URL || 'https://smartqueue-backend.vercel.app/api';
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://smartqueue-backend.vercel.app';
+const BASE = import.meta.env.VITE_API_URL || 'https://smartqueue-backend-kappa.vercel.app/api';
+export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://smartqueue-backend-kappa.vercel.app';
 
 export const getToken = () => localStorage.getItem('sq_token');
 export const setToken = (t) => (t ? localStorage.setItem('sq_token', t) : localStorage.removeItem('sq_token'));
