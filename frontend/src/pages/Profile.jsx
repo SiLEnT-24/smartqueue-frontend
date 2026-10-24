@@ -37,7 +37,7 @@ export default function Profile() {
       <Card><form onSubmit={save} className="space-y-4"><ErrorNote message={err} />
         <Field label="Name" id="n"><input id="n" className="input" required minLength={2} value={name} onChange={(e) => setName(e.target.value)} /></Field>
         <Field label="Email" id="e"><input id="e" className="input opacity-70" value={user.email} disabled /></Field>
-        <Field label="Phone number (international format)" id="phone"><input id="phone" type="tel" autoComplete="tel" placeholder="+14155552671" className="input" value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
+        <Field label="Phone number (India, international format)" id="phone"><input id="phone" type="tel" autoComplete="tel" placeholder="+919876543210" className="input" value={phone} onChange={(e) => setPhone(e.target.value)} /></Field>
         <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={smsOptIn} onChange={(e) => setSmsOptIn(e.target.checked)} /><span>Send me an SMS when a queue token is created for me.</span></label>
         <Field label="New password (leave blank to keep)" id="p"><input id="p" type="password" minLength={6} autoComplete="new-password" className="input" value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
         <button className="btn btn-primary">Save changes</button></form></Card>
