@@ -22,7 +22,7 @@ export default function QueueControl() {
 
   const run = async (fn) => { setBusy(true); setErr(''); try { await fn(); await load(); } catch (e) { setErr(e.message); toast(e.message, 'error'); } finally { setBusy(false); } };
   const body = { counterId: cid };
-  const callNext = () => run(async () => { const r = await api.post('/admin/queue/call-next', body); setNote(r.message); if (!r.token) toast('The queue is empty', 'info'); });
+  const callNext = () => run(async () => { const r = await api.post('/admin/queue/call-next', body); setNote(r.message); if (!r.token) toast('The queue is empty', 'info'); else if (r.token.emailSent === false) toast(`${r.token.tokenNumber} called, but the email could not be sent.`, 'error'); });
   const act = (id, action) => run(() => api.post(`/admin/queue/tokens/${id}/${action}`, body));
 
   if (!d && !err) return <Spinner />;

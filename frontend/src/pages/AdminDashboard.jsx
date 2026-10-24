@@ -28,7 +28,15 @@ function Overview() {
   const [summaryError, setSummaryError] = useState('');
   const [summaryLoading, setSummaryLoading] = useState(false);
   useEvent('queue:update', useCallback(() => reload(), []));
-  const autoCall = async (d) => { try { const r = await api.post('/admin/queue/auto-call', { departmentId: d._id }); toast(r.token ? `${r.token.tokenNumber} called. ${r.message}` : 'Queue is empty', r.token ? 'success' : 'info'); reload(); } catch (e) { toast(e.message, 'error'); } };
+  const autoCall = async (d) => {
+    try {
+      const r = await api.post('/admin/queue/auto-call', { departmentId: d._id });
+      if (!r.token) toast('Queue is empty', 'info');
+      else if (r.token.emailSent === false) toast(`${r.token.tokenNumber} called, but the email could not be sent.`, 'error');
+      else toast(`${r.token.tokenNumber} called. ${r.message}`, 'success');
+      reload();
+    } catch (e) { toast(e.message, 'error'); }
+  };
   const generateSummary = async () => {
     setSummaryLoading(true); setSummaryError('');
     try { const result = await api.get('/analytics/summary'); setSummary(result.summary); }

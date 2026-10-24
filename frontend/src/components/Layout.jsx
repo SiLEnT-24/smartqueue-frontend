@@ -1,9 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, Link, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Ticket, MessageSquareHeart, UserCog, Tv, LogOut, Menu, X, Sun, Moon, BarChart3, Monitor, Building2, ListOrdered, Activity, Bot } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme, useToast } from '../context/ThemeToast';
 import { useEvent } from '../context/SocketContext';
+import { playSoundAlert, unlockSoundAlerts } from '../sound';
 
 const NAV = {
   user: [['/app', 'My dashboard', LayoutDashboard, true], ['/app/new', 'Get a token', Ticket], ['/app/assistant', 'Assistant', Bot], ['/app/feedback', 'Feedback', MessageSquareHeart], ['/app/profile', 'Profile', UserCog]],
@@ -15,11 +16,27 @@ function useNotifications() {
   const toast = useToast();
   const last = useRef({});
   const estimates = useRef({});
+  useEffect(() => {
+    if (localStorage.getItem('sq_sound') !== 'true') return undefined;
+    const unlock = () => {
+      unlockSoundAlerts().then(() => {
+        window.removeEventListener('pointerdown', unlock);
+        window.removeEventListener('keydown', unlock);
+      }).catch((e) => toast(e.message, 'error'));
+    };
+    window.addEventListener('pointerdown', unlock);
+    window.addEventListener('keydown', unlock);
+    return () => {
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('keydown', unlock);
+    };
+  }, [toast]);
   useEvent('notify', useCallback((n) => {
     const now = Date.now();
     if (last.current[n.message] && now - last.current[n.message] < 30000) return; // avoid repeats
     last.current[n.message] = now;
     toast(n.message, ['CALLED', 'COMPLETED'].includes(n.type) ? 'success' : 'info');
+    if (n.type === 'CALLED' && localStorage.getItem('sq_sound') === 'true') playSoundAlert();
     if ('Notification' in window && Notification.permission === 'granted') new Notification('SmartQueue', { body: n.message });
   }, [toast]));
   useEvent('token:update', useCallback((t) => {
